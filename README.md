@@ -10,6 +10,7 @@ Please use the bug tracker if you find incorrect chords!
 All the files are licensed under the MIT license, and you can use in any project freely.
 
  * More details in [my blog](https://drolez.com/blog/music/free-midi-chords-progressions.php)
+ * Quick [Video demo](https://youtu.be/mNBI6uQXltY) with Ableton
 
 ## Installation
 
