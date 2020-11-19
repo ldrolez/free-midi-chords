@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2019 Ludovic Drolez
+# Copyright (c) 2019-2020 Ludovic Drolez
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +57,7 @@ def gen(dir, key, chords, prefix):
     if not os.path.exists(dir):
         os.makedirs(dir)
     c2m_obj = c2m.Chords2Midi()
-    c2m_obj.handle([f"{chords}", "-t", "4", "-p", "long", "-d", "4",
+    c2m_obj.handle([f"{chords}", "-t", "5", "-p", "long", "-d", "4",
         "-B", "--key", f"{key}", "-N", f"{prefix} - {chords}", "--output", 
         f"{dir}/{prefix} - {chords}.mid"])
 
@@ -69,7 +69,7 @@ def genprog(dir, key, chords, prefix):
         os.makedirs(dir)
     c2m_obj = c2m.Chords2Midi()
     args = chords.split(" ")
-    args.extend(["-t", "4", "-p", "long", "-d", "4", "-B", 
+    args.extend(["-t", "5", "-p", "long", "-d", "4", "-B", 
         "--key", f"{key}", "-N", f"{prefix} - {chords}", "--output", 
         f"{dir}/{prefix} - {chords}.mid"])
     c2m_obj.handle(args)
@@ -180,7 +180,8 @@ for key in keys:
             "i ii v i", "i iv v iv", "i iv VI v", "i iv VII i",
             "i iv VII v i i ii V", "i v iv VII",
             "i VI III bii", "i VI iv ii", "i VI III VII", "i VI VII VII",
-            "i bVIIM VI bii", "i VII VI VII", "i VII i v",
+            "i VI VII v", "i VI III VII i VI9 III VII",
+            "i bVIIM VI bii", "i VII VI III", "i VII VI VII", "i VII i v",
             "i VII i v III VII i v i", "i bVIIM bVIM bVIIM", 
             "ii v i i", "ii v i iv", "ii VI i iv", "ii7 v9 i7",
             "iv i v VI", "iv VI VII i", "iv III VII i", "iv v VI VII",
