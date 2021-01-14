@@ -64,16 +64,20 @@ def gen(dir, key, chords, prefix):
 #
 # Generate a chord progression
 #
-def genprog(dir, key, chords, prefix):
-    if not os.path.exists(dir):
-        os.makedirs(dir)
+def genprog(dir, key, chords, prefix, style = ''):
     c2m_obj = c2m.Chords2Midi()
     args = chords.split(" ")
-    args.extend(["-t", "5", "-p", "long", "-d", "4", "-B", 
+    if style != '':
+        args.extend(["-p", style])
+        dir = dir + "/" + style + " style"
+    else:
+        args.extend(["-d", "4", "-p", "long"])
+    args.extend(["-t", "5", "-B",
         "--key", f"{key}", "-N", f"{prefix} - {chords}", "--output", 
         f"{dir}/{prefix} - {chords}.mid"])
+    if not os.path.exists(dir):
+        os.makedirs(dir)
     c2m_obj.handle(args)
-
 
 num = 1
 # Iterate for each key
@@ -101,10 +105,9 @@ for key in keys:
 
     # Major 7th
     i = 0
-    # bug: pychord cannot create a m7-5add9
     for n in [['M7', 'M9'], ['m7', 'm9'], ['m7', 'm9'],
               ['M7', 'M9'], ['7', '9'], ['m7', 'm9'],
-              ['m7-5']]:
+              ['m7-5', 'm7b9b5']]:
         for c in n:
             chord = scale_maj[i] + c
             gen(f'{base}/2 7th and 9th/Major', root_maj, chord, deg_maj[i])
@@ -112,7 +115,7 @@ for key in keys:
 
     # Minor 7th
     i = 0
-    for n in [['m7', 'm9'], ['m7-5'], ['M7', 'M9'], 
+    for n in [['m7', 'm9'], ['m7-5', 'm7b9b5'], ['M7', 'M9'], 
               ['m7', 'm9'], ['m7', 'm9'],
               ['M7', 'M9'], ['7', '9']]:
         for c in n:
@@ -157,39 +160,41 @@ for key in keys:
         i = i + 1
 
     # Major progressions
-    for n in [
-            "I iii vi IV", "I iii IV vi", "I bIIM I iii", "I bIIM bIIIM bIIM",
-            "I bIIIM bVIM bVIIM", "I bIIIM bVIIM IV",
-            "I bVIM I bIIM", "I bVIIM bVIM bIIM", "I IV ii V",
-            "I IV vi V", "I IV V V", "I IV V bVIIM", "I IV bIIIM bVIM", 
-            "I IV bVIIM IV", "I V vi ii", "I V vi IV",
-            "I V vi iii IV", "I V vi V", "I V bVIIM IV", "I vi IV V",
-            "I V vi iii IV I IV V", 
-            "I bVIIM IV I", 
-            "ii bIIM I bVIIM", "ii IV V V", "ii V I I", "ii V I IV",
-            "ii bVIIM7 I", "ii7 V9 I7 I7", "iim7 V7 iiim7 vi7 iim7 V7",
-            "bIIIM ii bIIM I", "iii vi IV I",
-            "IV I ii vi", "IV I iii IV", "IV I V vi",
-            "V I vi V", "V IV vi I", "V vi IV I",
-            "vi IV I V", "vi bVIM bVIIM I", "vi V IV V",
-    ]:
-        genprog(f'{base}/4 Progression/Major', root_maj, n, root_maj)
+    for style in [ '', 'basic4', 'alt4', 'hiphop' ]:
+        for n in [
+                "I iii vi IV", "I iii IV vi", "I bIIM I iii", "I bIIM bIIIM bIIM",
+                "I bIIIM bVIM bVIIM", "I bIIIM bVIIM IV",
+                "I bVIM I bIIM", "I bVIIM bVIM bIIM", "I IV ii V",
+                "I IV vi V", "I IV V V", "I IV V bVIIM", "I IV bIIIM bVIM", 
+                "I IV bVIIM IV", "I V vi ii", "I V vi IV",
+                "I V vi iii IV", "I V vi V", "I V bVIIM IV", "I vi IV V",
+                "I V vi iii IV I IV V", 
+                "I bVIIM IV I", 
+                "ii bIIM I bVIIM", "ii IV V V", "ii V I I", "ii V I IV",
+                "ii bVIIM7 I", "ii7 V9 I7 I7", "iim7 V7 iiim7 vi7 iim7 V7",
+                "bIIIM ii bIIM I", "iii vi IV I",
+                "IV I ii vi", "IV I iii IV", "IV I V vi",
+                "V I vi V", "V IV vi I", "V vi IV I",
+                "vi IV I V", "vi bVIM bVIIM I", "vi V IV V",
+        ]:
+            genprog(f'{base}/4 Progression/Major', root_maj, n, root_maj, style)
 
     # Minor progressions
-    for n in [
-            "i ii v i", "i iv v iv", "i iv VI v", "i iv VII i",
-            "i iv VII v i i ii V", "i v iv VII",
-            "i VI III bii", "i VI iv ii", "i VI III VII", "i VI VII VII",
-            "i VI VII v", "i VI III VII i VI9 III VII",
-            "i bVIIM VI bii", "i VII VI III", "i VII VI VII", "i VII i v",
-            "i VII i v III VII i v i", "i bVIIM bVIM bVIIM", 
-            "ii v i i", "ii v i iv", "ii VI i iv", "ii7 v9 i7",
-            "iv i v VI", "iv VI VII i", "iv III VII i", "iv v VI VII",
-            "v i iv VII", "v iv i i", "v VI v i", "v VI III i",
-            "VI i v v", "VI VI i VII", "VI VII i III", "VI VII v III",
-            "VII iv VII i", "VII iv v i",
-     ]:
-        genprog(f'{base}/4 Progression/Minor', root_min.lower(), n, root_min)
+    for style in [ '', 'basic4', 'alt4', 'hiphop' ]:
+        for n in [
+                "i ii v i", "i iv v iv", "i iv VI v", "i iv VII i",
+                "i iv VII v i i ii V", "i v iv VII",
+                "i VI III bii", "i VI iv ii", "i VI III VII", "i VI VII VII",
+                "i VI VII v", "i VI III VII i VI9 III VII",
+                "i bVIIM VI bii", "i VII VI III", "i VII VI VII", "i VII i v",
+                "i VII i v III VII i v i", "i bVIIM bVIM bVIIM", 
+                "ii v i i", "ii v i iv", "ii VI i iv", "ii7 v9 i7",
+                "iv i v VI", "iv VI VII i", "iv III VII i", "iv v VI VII",
+                "v i iv VII", "v iv i i", "v VI v i", "v VI III i",
+                "VI i v v", "VI VI i VII", "VI VII i III", "VI VII v III",
+                "VII iv VII i", "VII iv v i",
+        ]:
+            genprog(f'{base}/4 Progression/Minor', root_min.lower(), n, root_min, style)
 
     # next key
     num = num + 1
