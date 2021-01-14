@@ -7,7 +7,7 @@ with your favorite DAW.
 This collection is FREE and you can contribute to it using the issue tracker above.
 Please use the bug tracker if you find incorrect chords! 
 
-All the files are licensed under the MIT license, and you can use in any project freely.
+All the MIDI files are licensed under the MIT license, and **you can them use in any musical project freely**.
 
  * More details in [my blog](https://drolez.com/blog/music/free-midi-chords-progressions.php)
  * Quick [Video demo](https://youtu.be/mNBI6uQXltY) with Ableton
@@ -28,8 +28,10 @@ The chords collection is organized using 3 levels of directories:
    * 1/ Triads
    * 2/ 7ths and 9ths chords
    * 3/ All other chords
-   * 4/ And progressions
+   * 4/ Chord progressions
  * 3rd level: Major and Minor scales
+
+Below the progressions directory, you'll find 3 more directories. They contain the same MIDI chord progressions files but with different timings: basic4 style, alt4 style and hiphop style.
 
 ## Related
 
