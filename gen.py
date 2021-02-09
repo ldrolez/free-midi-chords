@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2019-2020 Ludovic Drolez
+# Copyright (c) 2019-2021 Ludovic Drolez
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -8,10 +8,10 @@
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -49,6 +49,89 @@ keys = [
 
 deg_maj = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii']
 deg_min = ['i', 'ii', 'III', 'iv', 'v', 'VI', 'VII']
+
+# Major progressions
+prog_maj = [
+    "I bIIM I iii",
+    "I bIIM bIIIM bIIM",
+    "I bIIIM bVIM bVIIM",
+    "I bIIIM bVIIM IV",
+    "I iii IV vi",
+    "I iii vi IV",
+    "I IV ii V",
+    "I IV vi V",
+    "I IV V V",
+    "I IV V bVIIM",
+    "I IV bIIIM bVIM", 
+    "I IV bVIIM IV",
+    "I V vi ii",
+    "I V vi IV",
+    "I V vi iii IV",
+    "I V vi V",
+    "I V bVIIM IV",
+    "I V vi iii IV I IV V", 
+    "I bVIM I bIIM",
+    "I vi IV V",
+    "I bVIIM bVIM bIIM",
+    "I bVIIM IV I", 
+    "ii bIIM I bVIIM",
+    "ii IV V V",
+    "ii V I I",
+    "ii V I IV",
+    "ii bVIIM7 I", "ii7 V9 I7 I7",
+    "iim7 V7 iiim7 vi7 iim7 V7",
+    "bIIIM ii bIIM I",
+    "iii vi IV I",
+    "IV I ii vi",
+    "IV I iii IV",
+    "IV I V vi",
+    "V I vi V",
+    "V IV vi I",
+    "V vi IV I",
+    "vi IV I V",
+    "vi bVIM bVIIM I",
+    "vi V IV V",
+]
+
+# minor progressions
+prog_min = [
+    "i ii v i",
+    "i iv v iv",
+    "i iv VI v",
+    "i iv VII i",
+    "i iv VII v i i ii V",
+    "i v iv VII",
+    "i VI III bii",
+    "i VI iv ii",
+    "i VI III VII",
+    "i VI VII VII",
+    "i VI VII v",
+    "i VI III VII i VI9 III VII",
+    "i bVIIM bVIM bVIIM",
+    "i bVIIM VI bii",
+    "i VII i v",
+    "i VII i v III VII i v i",
+    "i VII VI III",
+    "i VII VI VII",
+    "ii v i i",
+    "ii v i iv",
+    "ii VI i iv",
+    "ii7 v9 i7",
+    "iv i v VI",
+    "iv VI VII i",
+    "iv III VII i",
+    "iv v VI VII",
+    "v i iv VII",
+    "v iv i i",
+    "v VI III i",
+    "v VI v i",
+    "VI i v v",
+    "VI VI i VII",
+    "VI VII i III",
+    "VI VII v III",
+    "VII iv VII i",
+    "VII iv v i",
+]
 
 #
 # Generate a single chord
@@ -161,39 +244,12 @@ for key in keys:
 
     # Major progressions
     for style in [ '', 'basic4', 'alt4', 'hiphop' ]:
-        for n in [
-                "I iii vi IV", "I iii IV vi", "I bIIM I iii", "I bIIM bIIIM bIIM",
-                "I bIIIM bVIM bVIIM", "I bIIIM bVIIM IV",
-                "I bVIM I bIIM", "I bVIIM bVIM bIIM", "I IV ii V",
-                "I IV vi V", "I IV V V", "I IV V bVIIM", "I IV bIIIM bVIM", 
-                "I IV bVIIM IV", "I V vi ii", "I V vi IV",
-                "I V vi iii IV", "I V vi V", "I V bVIIM IV", "I vi IV V",
-                "I V vi iii IV I IV V", 
-                "I bVIIM IV I", 
-                "ii bIIM I bVIIM", "ii IV V V", "ii V I I", "ii V I IV",
-                "ii bVIIM7 I", "ii7 V9 I7 I7", "iim7 V7 iiim7 vi7 iim7 V7",
-                "bIIIM ii bIIM I", "iii vi IV I",
-                "IV I ii vi", "IV I iii IV", "IV I V vi",
-                "V I vi V", "V IV vi I", "V vi IV I",
-                "vi IV I V", "vi bVIM bVIIM I", "vi V IV V",
-        ]:
+        for n in prog_maj:
             genprog(f'{base}/4 Progression/Major', root_maj, n, root_maj, style)
 
     # Minor progressions
     for style in [ '', 'basic4', 'alt4', 'hiphop' ]:
-        for n in [
-                "i ii v i", "i iv v iv", "i iv VI v", "i iv VII i",
-                "i iv VII v i i ii V", "i v iv VII",
-                "i VI III bii", "i VI iv ii", "i VI III VII", "i VI VII VII",
-                "i VI VII v", "i VI III VII i VI9 III VII",
-                "i bVIIM VI bii", "i VII VI III", "i VII VI VII", "i VII i v",
-                "i VII i v III VII i v i", "i bVIIM bVIM bVIIM", 
-                "ii v i i", "ii v i iv", "ii VI i iv", "ii7 v9 i7",
-                "iv i v VI", "iv VI VII i", "iv III VII i", "iv v VI VII",
-                "v i iv VII", "v iv i i", "v VI v i", "v VI III i",
-                "VI i v v", "VI VI i VII", "VI VII i III", "VI VII v III",
-                "VII iv VII i", "VII iv v i",
-        ]:
+        for n in prog_min:
             genprog(f'{base}/4 Progression/Minor', root_min.lower(), n, root_min, style)
 
     # next key
