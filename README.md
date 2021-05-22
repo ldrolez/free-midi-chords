@@ -39,6 +39,9 @@ The script uses chords2midi from Rich Jones, and Python Mingus.
 
  * [chords2midi](https://github.com/Miserlou/chords2midi) - Create MIDI files from numerical chord progressions.
 
+The following software is also bundled with this chords pack:
+
+ * [Helium AUv3 MIDI Sequencer for iPad](https://apps.apple.com/gb/app/helium-auv3-midi-sequencer/id1563152523)
 
 Ludovic Drolez.
 
