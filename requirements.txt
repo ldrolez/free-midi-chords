@@ -1,0 +1,3 @@
+MIDIUtil>=1.2.1
+mingus>=0.6.1
+pychord>=0.6.2
