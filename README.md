@@ -33,6 +33,12 @@ The chords collection is organized using 3 levels of directories:
 
 Below the progressions directory, you'll find 3 more directories. They contain the same MIDI chord progressions files but with different timings: basic4 style, alt4 style and hiphop style.
 
+## How to contribute
+
+To suggest new chords for the next chord pack:
+ * Go to [new chords suggestions](https://github.com/ldrolez/free-midi-chords/issues/new?assignees=&labels=new+chords&template=new-chord.md&title=%5Bnew+chord+progression%5D+)
+ * Or send me a PM
+
 ## Related
 
 The script uses chords2midi from Rich Jones, and Python Mingus.
