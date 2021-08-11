@@ -130,7 +130,7 @@ for key in keys:
         for n in chord_types:
             chord = scale_maj[i] + n
             gen(f'{base}/3 All chords/', root_maj, chord, deg_maj[i] 
-                + '-' + deg_min[(i+5) % 7])
+                + '-' + deg_min[(i+2) % 7])
         i = i + 1
 
     # Major progressions
