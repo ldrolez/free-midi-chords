@@ -48,6 +48,7 @@ The script uses chords2midi from Rich Jones, and Python Mingus.
 The following software is also bundled with this chords pack:
 
  * [Helium AUv3 MIDI Sequencer for iPad](https://apps.apple.com/gb/app/helium-auv3-midi-sequencer/id1563152523)
+ * [chordProgressions Max4Live device](https://maxforlive.com/library/device.php?id=7559)
 
 Ludovic Drolez.
 
