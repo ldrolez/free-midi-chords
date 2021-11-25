@@ -47,6 +47,7 @@ prog_maj = [
     "I V vi V",
     "I V vi iii IV I IV V", 
     "I V bVIIM IV",
+    "I7 V7 vi9 IV7",
     "I bVIM I bIIM",
     "I vi I IV", 
     "I vi ii IV", 
@@ -74,6 +75,8 @@ prog_maj = [
     "vi IV I V",
     "vi bVIM bVIIM I",
     "vi V IV V",
+    "vi V IV V ii V I I",
+    "vi vii V vi #IVdim V"
 ]
 
 # minor progressions
@@ -102,6 +105,7 @@ prog_min = [
     "i VII i v",
     "i VII i v III VII i v i",
     "i VII VI III",
+    "i VII VI III iv VI VII i",
     "i VII VI VII",
     "i7 VI III7 VII6 i i7 III7 iv7",
     "ii v i i",
@@ -110,6 +114,7 @@ prog_min = [
     "ii7 v9 i7",
     "iv i v VI",
     "iv VI VII i",
+    "iv III vsus4 VI iv i III VI",
     "iv III VII i",
     "iv v VI VII",
     "v i iv VII",
