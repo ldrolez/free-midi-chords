@@ -1,4 +1,4 @@
-# Free MIDI Chords
+# SHLD Free MIDI Chord Packs
 
 Now over than 7000 MIDI files! This is a collaborative project to create a collection of all chords
 and useful chord progressions in all keys, as MIDI files, usable
