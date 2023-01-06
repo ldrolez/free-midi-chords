@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2019-2021 Ludovic Drolez
+# Copyright (c) 2019-2023 Ludovic Drolez
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -127,6 +127,11 @@ for key in keys:
     # All Other chords
     i = 0
     for c in [1, 2, 3, 4, 5, 6, 7]:
+        if c == 1 or c == 4 or c == 5:
+            chord_types = chord_types_maj
+        else:
+            chord_types = chord_types_min
+
         for n in chord_types:
             chord = scale_maj[i] + n
             gen(f'{base}/3 All chords/', root_maj, chord, deg_maj[i] 
