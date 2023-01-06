@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2019-2021 Ludovic Drolez
+# Copyright (c) 2019-2023 Ludovic Drolez
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -48,6 +48,7 @@ prog_maj = [
     "I V vi V",
     "I V vi iii IV I IV V", 
     "I V bVIIM IV",
+    "I IV vii iii vi ii V I",
     "I7 V7 vi9 IV7",
     "I bVIM I bIIM",
     "I vi I IV", 
@@ -62,7 +63,8 @@ prog_maj = [
     "ii IV vi V",
     "ii V I I",
     "ii V I IV",
-    "ii bVIIM7 I", "ii7 V9 I7 I7",
+    "ii bVIIM7 I", 
+    "ii7 V9 I7 I7",
     "iim7 V7 iiim7 vi7 iim7 V7",
     "bIIIM ii bIIM I",
     "iii vi IV I",
@@ -70,15 +72,20 @@ prog_maj = [
     "IV I iii IV",
     "IV I V vi",
     "IV IV I V",
+    "IV vi I V",
     "IV vi iii I",
     "V I vi V",
     "V IV vi I",
     "V vi IV I",
+    "vi ii V I",
     "vi IV I V",
     "vi bVIM bVIIM I",
     "vi V IV V",
     "vi V IV V ii V I I",
-    "vi vii V vi #IVdim V"
+    "vi vii V vi #IVdim V",
+    # cadences
+    "bIII V7 I",  
+    "bVII V7 I"
 ]
 
 # minor progressions
@@ -93,6 +100,7 @@ prog_min = [
     "i iv VII i",
     "i iv VII v i i ii V",
     "i v iv VII",
+    "i VM VII IVM VI III iv VM",
     "i VI bi v",
     "i VI III bii",
     "i VI III VII",
@@ -109,8 +117,6 @@ prog_min = [
     "i VII v VI",
     "i VII VI III",
     "i VII VI III iv VI VII i",
-    "i VII VI VM",
-    "i viim VI VM",
     "i VII VI VII",
     "i7 VI III7 VII6 i i7 III7 iv7",
     "ii v i i",
@@ -121,6 +127,7 @@ prog_min = [
     "iv VI VII i",
     "iv III vsus4 VI iv i III VI",
     "iv III VII i",
+    "iv III iim7 VM",
     "iv v VI VII",
     "v i iv VII",
     "v iv i i",
@@ -129,6 +136,7 @@ prog_min = [
     "VI i v III",
     "VI i v v",
     "VI iv i v",
+    "VI III i v",
     "VI bVI i VII",
     "VI VIm i VII",
     "VI VI i VII",
@@ -136,10 +144,16 @@ prog_min = [
     "VI VII v III",
     "VII iv VII i",
     "VII iv v i",
+    # cadences
+    "i VII VI VM",
+    "i VII VI V7",
+    "i viim VI VM",
+    "i bVIIM bVIM iv"
 ]
 
 # Chord Types
-chord_types = [
+# with major third
+chord_types_maj = [
     'sus2',  # 0, 2, 7
     'sus4',  # 0, 5, 7
     '6',  # 0, 4, 7, 9
@@ -147,23 +161,40 @@ chord_types = [
     '7-5',  # 0, 4, 6, 10
     '7+5',  # 0, 4, 8, 10
     '7sus4',  # 0, 5, 7, 10
-    'm6',  # 0, 3, 7, 9
-    'm7',  # 0, 3, 7, 10
-    'm7-5',  # 0, 3, 6, 10
-    'dim6',  # 0, 3, 6, 9
     'maj7',  # 0, 4, 7, 11
     'M7+5',  # 0, 4, 8, 11
-    'mM7',  # 0, 3, 7, 11
+    'add4',  # 0, 4, 5, 7
     'add9',  # 0, 4, 7, 14
-    'madd9',  # 0, 3, 7, 14
+    'sus4add9', # 0, 5, 7, 14
     '2',  # 0, 4, 7, 14
     'add11',  # 0, 4, 7, 17
-    'm69',  # 0, 3, 7, 9, 14
     '69',  # 0, 4, 7, 9, 14
     '9',  # 0, 4, 7, 10, 14
-    'm9',  # 0, 3, 7, 10, 14
     'maj9',  # 0, 4, 7, 11, 14
     '9sus4',  # 0, 5, 7, 10, 14
     '7-9',  # 0, 4, 7, 10, 13
-    '7+11',  # 0, 4, 7, 10, 18
+    '7+11'  # 0, 4, 7, 10, 18
+]
+
+# with minor third
+chord_types_min = [
+    'sus2',  # 0, 2, 7
+    'sus4',  # 0, 5, 7
+    '7sus4',  # 0, 5, 7, 10
+    'm6',  # 0, 3, 7, 9
+    'm7',  # 0, 3, 7, 10
+    'm7-5',  # 0, 3, 6, 10
+    'm7+5',  # 0, 3, 8, 10
+    'dim6',  # 0, 3, 6, 9
+    'dim7', # 0, 3, 6, 9
+    'mM7',  # 0, 3, 7, 11
+    'madd4', # 0, 3, 5, 7
+    'madd9',  # 0, 3, 7, 14
+    'sus4add9', # 0, 5, 7, 14
+    'm69',  # 0, 3, 7, 9, 14
+    'm9',  # 0, 3, 7, 10, 14
+    '9sus4',  # 0, 5, 7, 10, 14
+    'm7b9b5', # 0, 3, 6, 10, 13
+    'm7add11', # 0, 3, 7, 10, 17
+    'mM7add11' # 0, 3, 7, 11, 17
 ]
