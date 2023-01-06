@@ -21,17 +21,23 @@ Then drag and drop the MIDI files from your DAW to your tracks.
 
 ## Contents
 
-The chords collection is organized using 3 levels of directories:
+In the file free-midi-chords-YYYYMMDD, the chords collection is organized using 4 levels of directories:
 
  * 1st level: All 12 Major and Minor keys
- * 2nd level: 
-   * 1/ Triads
-   * 2/ 7ths and 9ths chords
-   * 3/ All other chords
-   * 4/ Chord progressions
- * 3rd level: Major and Minor scales
+   * 2nd level: 
+     * 1 Triads
+       * 3rd level: Major and Minor scales
+     * 2 7ths and 9ths chords
+       * 3rd level: Major and Minor scales
+     * 3 All other chords
+       * 3rd level: Major and Minor scales
+     * 4 Chord progressions
+       * 3rd level: Major and Minor scales
+         * 4th level: Rhythmic variations 
 
 Below the progressions directory, you'll find 3 more directories. They contain the same MIDI chord progressions files but with different timings: basic4 style, alt4 style and hiphop style.
+
+In the file free-midi-progressions-YYYYMMDD, you'll find only chord progressions in all the keys in a single directory. This way it's easier to import them in your Akai MPC, Roland MC-707 or MC-101 for example. 
 
 ## How to contribute
 
