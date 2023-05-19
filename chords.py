@@ -27,6 +27,7 @@ prog_maj = [
     "I bIIM I iii",
     "I bIIM bIIIM bIIM",
     "I IIM iii V6",
+    "I IIM7 IV I",
     "I bIIIM bVIM bVIIM",
     "I bIIIM bVIIM IV",
     "I iii IV vi",
