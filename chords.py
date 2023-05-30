@@ -20,9 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-
 # Major progressions
 prog_maj = [
+    "Isus2 I vi7 visus4",
+    "I I IM-5 IM-5 IV IV V Vsus2",
     "I I IV iii",
     "I bIIM I iii",
     "I bIIM bIIIM bIIM",
@@ -33,6 +34,7 @@ prog_maj = [
     "I iii IV vi",
     "I iii vi Isus4",
     "I iii vi IV",
+    "I5 iii II5 #IVm IV5 vi V5 viim"
     "I IV Isus2 IV",
     "I IV ii V",
     "I IV V IV",
@@ -93,6 +95,7 @@ prog_maj = [
 
 # minor progressions
 prog_min = [
+    "i i iv iv v7 ii5 v v7",
     "i bIIM iv III bIIM iv III III",
     "i ii v i",
     "i iim v IVM",
