@@ -34,7 +34,7 @@ prog_maj = [
     "I iii IV vi",
     "I iii vi Isus4",
     "I iii vi IV",
-    "I5 iii II5 #IVm IV5 vi V5 viim"
+    "I5 iii II5 #IVm IV5 vi V5 viim",
     "I IV Isus2 IV",
     "I IV ii V",
     "I IV V IV",
