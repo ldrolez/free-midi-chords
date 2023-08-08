@@ -20,6 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+# To build the pack you will need the modified python-mingus library:
+# https://github.com/ldrolez/python-mingus.git
+# It seems that python-mingus is not maintained and a few important
+# chords are missing for some progressions.
+
 import os
 import mingus.core.scales as scales
 
