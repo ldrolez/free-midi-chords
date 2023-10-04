@@ -20,9 +20,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-
 # Major progressions
 prog_maj = [
+    "Isus2 I vi7 visus4",
+    "I I IM-5 IM-5 IV IV V Vsus2",
     "I I IV iii",
     "I bIIM I iii",
     "I bIIM bIIIM bIIM",
@@ -33,6 +34,7 @@ prog_maj = [
     "I iii IV vi",
     "I iii vi Isus4",
     "I iii vi IV",
+    "I5 iii II5 #IVm IV5 vi V5 viim",
     "I IV Isus2 IV",
     "I IV ii V",
     "I IV V IV",
@@ -50,7 +52,7 @@ prog_maj = [
     "I V vi iii IV I IV V", 
     "I V bVIIM IV",
     "I IV vii iii vi ii V I",
-    "I7 V7 vi9 IV7",
+    "I7 V7 viadd9 IV7",
     "I bVIM I bIIM",
     "I vi I IV", 
     "I vi ii IV", 
@@ -65,7 +67,7 @@ prog_maj = [
     "ii V I I",
     "ii V I IV",
     "ii bVIIM7 I", 
-    "ii7 V9 I7 I7",
+    "ii7 Vadd9 I7 I7",
     "iim7 V7 iiim7 vi7 iim7 V7",
     "bIIIM ii bIIM I",
     "iii vi IV I",
@@ -93,7 +95,11 @@ prog_maj = [
 
 # minor progressions
 prog_min = [
+    "i i iv iv v7 ii5 v v7",
+    "i bIIM iv III bIIM iv III III",
     "i ii v i",
+    "i iim v IVM",
+    "i iim v III i iim v VII",
     "i III iv VI",
     "i III VII VI",
     "i iv v iv",
@@ -104,6 +110,7 @@ prog_min = [
     "i iv VII v i i ii V",
     "im7 ivsus4 v7 isus4",
     "i v iv VII",
+    "i vdim iv VI",
     "i VM VII IVM VI III iv VM",
     "i VI bi v",
     "i VI III bii",
@@ -126,17 +133,23 @@ prog_min = [
     "ii v i i",
     "ii v i iv",
     "ii VI i iv",
-    "ii7 v9 i7",
+    "iim IVM v VII",
+    "bIIM iv III i",
+    "bIIM VI III VIIm",
     "iv i v VI",
+    "iv VI v VII",
     "iv VI VII i",
     "iv III vsus4 VI iv i III VI",
     "iv III VII i",
     "iv III iim7 VM",
     "iv v VI VII",
+    "iv i VIIm VI",
+    "IVM v iim i III IVM",
     "v i iv VII",
     "v iv i i",
     "v VI III i",
     "v VI v i",
+    "vdim vdim iv III",
     "VI i v III",
     "VI i v v",
     "VI iv i v",
@@ -146,8 +159,10 @@ prog_min = [
     "VI VI i VII",
     "VI VII i III",
     "VI VII v III",
+    "VI VIIm i bIIM",
     "VII iv VII i",
     "VII iv v i",
+    "VIIm bIIM III i",
     # cadences
     "i VII VI VM",
     "i VII VI V7",
