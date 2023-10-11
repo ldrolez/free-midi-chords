@@ -56,5 +56,7 @@ The following software is also bundled with this chords pack:
  * [Helium AUv3 MIDI Sequencer for iPad](https://apps.apple.com/gb/app/helium-auv3-midi-sequencer/id1563152523)
  * [chordProgressions Max4Live device](https://maxforlive.com/library/device.php?id=7559)
 
+This chord pack was also distributed in [Computer Music magazine issue 326](https://www.musicradar.com/news/issue-326-of-computer-music-is-on-sale-now).
+
 Ludovic Drolez.
 
