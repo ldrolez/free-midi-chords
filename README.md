@@ -32,8 +32,14 @@ In the file free-midi-chords-YYYYMMDD, the chords collection is organized using 
      * 3 All other chords
        * 3rd level: Major and Minor scales
      * 4 Chord progressions
-       * 3rd level: Major and Minor scales
+       * 3rd level: Major, Minor and Modal progressions
          * 4th level: Rhythmic variations 
+
+The chord progressions are organized into three categories: Major, Minor, and Modal. 
+ * The Major and Minor directories contain chord progressions strictly within their respective major or minor keys, using traditional notation commonly found in classical music. 
+ * The Modal directory, however, includes chord progressions that incorporate notes from other scales and modern modes. This creates varied tonal landscapes and emotional expressions. The Modal directory uses a modern Roman numeral analysis where numerals are always relative to the Ionian mode. This method contrasts with the traditional notation used in the Major and Minor folders.
+
+For more detailed information on modal notation in Roman numeral analysis, you can visit the Wikipedia page on [Roman numeral analysis – Modes](https://en.wikipedia.org/wiki/Roman_numeral_analysis#Modes).
 
 Below the progressions directory, you'll find 3 more directories. They contain the same MIDI chord progressions files but with different timings: basic4 style, alt4 style and hiphop style.
 
