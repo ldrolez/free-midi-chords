@@ -153,5 +153,10 @@ for key in keys:
         for n in prog_min:
             genprog(f'{base}/4 Progression/Minor', root_min.lower(), n, root_min, style)
 
+    # Modal progressions
+    for style in [ '', 'basic4', 'alt4', 'hiphop' ]:
+        for n in prog_modal:
+            genprog(f'{base}/4 Progression/Modal', root_maj, n, root_maj, style)
+
     # next key
     num = num + 1
