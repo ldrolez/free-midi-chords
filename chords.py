@@ -94,7 +94,9 @@ prog_min = [
     "i VI iv III",
     "i VI iv v",
     "i VI VII VII",
+    "i VI VII iv",
     "i VI VII v",
+    "i VII i i VI v i",
     "i VII i v",
     "i VII III VI",
     "i VII i v III VII i v i",
@@ -102,6 +104,7 @@ prog_min = [
     "i VII VI III",
     "i VII VI III iv VI VII i",
     "i VII VI iv",
+    "i VII VI iv ivsus4 iv",
     "i VII VI VII",
     "i7 VI III7 VII6 i i7 III7 iv7",
     "ii v i i",
@@ -141,7 +144,6 @@ prog_min = [
 # 5   Mixolydian      I   ii  iiio  IV   v   vi  ♭VII
 # 6   Aeolian (n.min) i   iio ♭III  iv   v   ♭VI ♭VII
 # 7   Locrian         io  ♭II ♭iii  iv   ♭V  ♭VI ♭vii
-
 # Modal progressions
 prog_modal = [
     "bIIIM ii bIIM I",
