@@ -161,6 +161,7 @@ prog_modal = [
     "I IV V bVIIM",
     "I ivm bIIIM bVIIM",
     "I V bVIIM IV",
+    "I V ivm bVIM",
     "I5 iii II5 #IVm IV5 vi V5 viim",
     "ii bIIM I bVIIM",
     "ii bVIIM7 I", 
