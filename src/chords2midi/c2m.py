@@ -392,6 +392,17 @@ class Chords2Midi(object):
                             else:
                                 pitches.append(new_pitch + 12)
 
+            # find if two pitches are 1 semitone apart to avoid dissonances
+            length = len(pitches)
+            for i in range(length):
+                for j in range(i + 1, length):
+                    if abs(pitches[i] - pitches[j]) == 1:
+                        # move the note one octave up
+                        if (bar/4) % 2 == 0:
+                            pitches[j] = pitches[j] + 12
+                        else:
+                            pitches[i] = pitches[i] + 12
+
             # Bassline
             if bassline:
                 pitches.append(root_pitch - 24)
