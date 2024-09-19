@@ -27,6 +27,7 @@
 
 import os
 import mingus.core.scales as scales
+import sys
 
 from src.chords2midi import c2m
 from chords import *
@@ -53,8 +54,17 @@ keys = [
     # ('Cb', 'ab'), #  7 b
 ]
 
+# Chords in Major and minor scales
 deg_maj = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii']
 deg_min = ['i', 'ii', 'III', 'iv', 'v', 'VI', 'VII']
+
+# progressions styles
+styles = [ '', 'basic4', 'alt4', 'hiphop' ]
+
+# Test mode
+if len(sys.argv) > 1 and sys.argv[1] == '--test':
+    keys = [ ('C', 'A') ]
+    styles = [ '' ]
 
 #
 # Generate a single chord
@@ -144,17 +154,17 @@ for key in keys:
         i = i + 1
 
     # Major progressions
-    for style in [ '', 'basic4', 'alt4', 'hiphop' ]:
+    for style in styles:
         for n in prog_maj:
             genprog(f'{base}/4 Progression/Major', root_maj, n, root_maj, style)
 
     # Minor progressions
-    for style in [ '', 'basic4', 'alt4', 'hiphop' ]:
+    for style in styles:
         for n in prog_min:
             genprog(f'{base}/4 Progression/Minor', root_min.lower(), n, root_min, style)
 
     # Modal progressions
-    for style in [ '', 'basic4', 'alt4', 'hiphop' ]:
+    for style in styles:
         for n in prog_modal:
             genprog(f'{base}/4 Progression/Modal', root_maj, n, root_maj, style)
 
