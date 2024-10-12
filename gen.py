@@ -28,6 +28,7 @@
 import os
 import mingus.core.scales as scales
 import sys
+import re
 
 from src.chords2midi import c2m
 from chords import *
@@ -64,7 +65,7 @@ styles = [ '', 'basic4', 'alt4', 'hiphop' ]
 # Test mode
 if len(sys.argv) > 1 and sys.argv[1] == '--test':
     keys = [ ('C', 'A') ]
-    styles = [ '' ]
+    #styles = [ '' ]
 
 #
 # Generate a single chord
@@ -82,11 +83,17 @@ def gen(dir, key, chords, prefix):
 #
 def genprog(dir, key, chords, prefix, style = ''):
     c2m_obj = c2m.Chords2Midi()
-    args = chords.split(" ")
+    # two spaces to insert a rest
+    newchords = re.sub(r'  ', ' X ', chords)
+    args = newchords.split(" ")
     if style != '':
         args.extend(["-p", style])
         dir = dir + "/" + style + " style"
-    else:
+    elif re.search(r' X ', newchords):
+        # if there are rests 
+        args.extend(["-d", "2", "-p", "basic"])
+    else:    
+        # no rests
         args.extend(["-d", "4", "-p", "long"])
     args.extend(["-t", "5", "-B",
         "--key", f"{key}", "-N", f"{prefix} - {chords}", "--output", 
