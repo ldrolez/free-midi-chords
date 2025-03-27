@@ -33,7 +33,9 @@ In the file free-midi-chords-YYYYMMDD, the chords collection is organized using 
        * 3rd level: Major and Minor scales
      * 4 Chord progressions
        * 3rd level: Major, Minor and Modal progressions
-         * 4th level: Rhythmic variations 
+         * 4th level: Rhythmic variations
+      
+At the first level, you have the 12 major scales, along with the relative minor scales. To avoid confusing the [relative and parallel scales, read this article](https://drolez.com/blog/music/parallel-keys-relative-keys.php) for more information.
 
 The chord progressions are organized into three categories: Major, Minor, and Modal. 
  * The Major and Minor directories contain chord progressions strictly within their respective major or minor keys, using traditional notation commonly found in classical music. 
