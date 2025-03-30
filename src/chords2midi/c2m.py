@@ -255,7 +255,7 @@ class Chords2Midi(object):
                     pitches.append(pitch)
 
             no_melodic_fluency = False # XXX: vargify
-            if previous_pitches == [] or all_new_pitches == [] or pitches == [] or no_melodic_fluency:
+            if previous_pitches == [] or all_new_pitches == [] or pitches == [] or no_melodic_fluency or pitches[0] == all_new_pitches[0]:
                 pitches = all_new_pitches
             else:
                 # Detect the root direction
@@ -264,7 +264,6 @@ class Chords2Midi(object):
                     root_upwards = True
                 else:
                     root_upwards = False
-
                 # Move the shortest distance
                 if pitches != []:
                     new_remaining_pitches = list(all_new_pitches)
@@ -275,7 +274,6 @@ class Chords2Midi(object):
                             new_remaining_pitches.remove(new_pitch)
                             old_remaining_pitches.remove(new_pitch)
                             continue
-
                     # Okay, so need to find the overall shortest distance from the remaining pitches - including their permutations!
                     while len(new_remaining_pitches) > 0:
                         nearest_distance = 9999
