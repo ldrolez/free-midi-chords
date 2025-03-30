@@ -14,7 +14,7 @@ All the MIDI files are licensed under the MIT license, and **you can them use in
 
 ## Installation
 
-Just download and unzip one of the [release file](https://github.com/ldrolez/free-midi-chords/releases). 
+Just download and unzip one of the [release file](https://github.com/ldrolez/free-midi-chords/releases) to your DAWs User Library or Content Library. 
 Then drag and drop the MIDI files from your DAW to your tracks.
 
 ![Drag drop chords ableton](https://i.imgur.com/R4Mr6Ac.gif)
