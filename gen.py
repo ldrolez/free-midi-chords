@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2019-2023 Ludovic Drolez
+# Copyright (c) 2019-2025 Ludovic Drolez
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -83,6 +83,11 @@ def gen(dir, key, chords, prefix):
 #
 def genprog(dir, key, chords, prefix, style = ''):
     c2m_obj = c2m.Chords2Midi()
+    # is there an = in the string
+    desc = ""
+    if ' =' in chords:
+        chords, desc = chords.split(' =', 1)
+        desc = " - " + desc
     # two spaces to insert a rest
     newchords = re.sub(r'  ', ' X ', chords)
     args = newchords.split(" ")
@@ -97,7 +102,7 @@ def genprog(dir, key, chords, prefix, style = ''):
         args.extend(["-d", "4", "-p", "long"])
     args.extend(["-t", "5", "-B",
         "--key", f"{key}", "-N", f"{prefix} - {chords}", "--output", 
-        f"{dir}/{prefix} - {chords}.mid"])
+        f"{dir}/{prefix} - {chords}{desc}.mid"])
     if not os.path.exists(dir):
         os.makedirs(dir)
     c2m_obj.handle(args)
