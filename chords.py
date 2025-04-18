@@ -24,6 +24,8 @@
 prog_maj = [
     "I I IM-5 IM-5 IV IV V Vsus2 =Joyful Triumphant",
     "I I IV iii =Hopeful Nostalgic",
+    "I I7 Idom7 I7 =Relaxed Playful",
+    "I I7 Idom7 IV =Relaxed Nostalgic",
     "I iii IV vi =Romantic Nostalgic",
     "I iii vi Isus4 =Tender Spiritual",
     "I iii vi IV =Romantic Hopeful",
@@ -159,6 +161,7 @@ prog_modal = [
     "I bVIIM IV V =Joyful Triumphant",
     "I bVIM I bIIM =Surprised Mysterious",
     "I bVIM IV bIIIM bVIIM =Mysterious Nostalgic",
+    "I I7 Idom7 IV ivm I =Relaxed Nostalgic",
     "I IIIM vi V =Joyful Hopeful",
     "I IIM iii V6 =Surprised Triumphant",
     "I IIM IV I =Joyful Triumphant",
