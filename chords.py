@@ -72,7 +72,7 @@ prog_maj = [
 
 # minor progressions
 prog_min = [
-    "i i iv iv v7 ii5 v v7 =Anguished Mysterious",
+    "i i iv iv v7 ii5 v v7 =Dark Mysterious",
     "i ii v i =Mysterious Triumphant",
     "i III iv VI =Nostalgic Romantic",
     "i III VII VI =Nostalgic Romantic",
@@ -82,7 +82,7 @@ prog_min = [
     "i iv v v =Sad Lonely",
     "i iv VI v =Sad Hopeful",
     "i iv VII i =Sad Nostalgic",
-    "i iv VII v i i ii V =Mysterious Surprised ",
+    "i iv VII v i i ii V =Mysterious Surprised",
     "i v iv VII =Sad Rebellious",
     "i vdim iv VI =Dark Nostalgic",
     "i VI III VII i VI69 III7 VII =Mysterious Spiritual",
