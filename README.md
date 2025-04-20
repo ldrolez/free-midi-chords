@@ -1,8 +1,9 @@
 # SHLD Free MIDI Chord Packs
 
-Now over than 10000 MIDI files and 165 chord progressions per key! This is a collaborative project to create a collection of all chords
+Now over than 10000 MIDI files and 170 chord progressions per key! This is a collaborative project to create a collection of all chords
 and useful chord progressions in all keys, as MIDI files, usable
-with your favorite DAW.
+with your favorite DAW. 
+Each progression comes with mood-based tags, yes you can finally find that "nostalgic but hopeful" progression without scrolling for hours.
 
 This collection is FREE and you can contribute to it using the issue tracker above.
 Please use the bug tracker if you find incorrect chords! 
@@ -10,7 +11,7 @@ Please use the bug tracker if you find incorrect chords!
 All the MIDI files are licensed under the MIT license, and **you can them use in any musical project freely**.
 
  * More details in [my blog](https://drolez.com/blog/music/free-midi-chords-progressions.php)
- * [How to properly use a MIDI Chord Pack](https://youtu.be/EspZ4lj9TaU)
+ * [How to use a MIDI Chord Pack](https://youtu.be/iiGmT8xG-IA)
 
 ## Installation
 
