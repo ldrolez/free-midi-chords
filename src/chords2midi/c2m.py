@@ -6,40 +6,12 @@ import os
 import pychord
 import time
 import traceback
+import re
 
 from midiutil import MIDIFile
 from mingus.core.progressions import to_chords, determine
 import mingus.core.notes as notes
-
-####################################################################
-# Data
-####################################################################
-
-# N: Next
-# S: Same
-# X: Rest
-
-# TODO:
-# +Z: Move Z Intervals Up
-# +Z: Move Z Intervals Down
-
-# TODO:
-# Include duration in inputs
-# ex: 2N X N .5S .5S
-
-N = 'N'
-X = 'X'
-S = 'S'
-patterns = {
-    'long': [N, X, X, X],
-    'basic': [N, X],
-    'basic2': [N, X, S, X,],
-    'basic4': [N, X, S, X, S, X, S, X],
-    'alt': [X, N],
-    'alt2': [X, N, X, S],
-    'alt4': [X, N, X, S, X, S, X, S],
-    'hiphop': [N, X, X, N, X, N, X, N]
-}
+from .c2mpatterns import *
 
 ####################################################################
 # Main
@@ -125,7 +97,7 @@ class Chords2Midi(object):
         track    = 0
         channel  = 0
         ttime     = 0
-        duration = self.vargs['duration'] # In beats
+        base_duration = self.vargs['duration'] # In beats
         tempo    = self.vargs['bpm']   # In BPM
         volume   = 100  # 0-127, as per the MIDI standard
         bar = 0
@@ -156,33 +128,52 @@ class Chords2Midi(object):
                 print("Invalid pattern! Must be one of: " + (', '.join(patterns.keys())))
                 return
 
+            # Helper to parse optional numeric prefix in pattern tokens
+            def _parse_pattern_token(tok):
+                m = re.match(r'^([0-9]*\.?[0-9]+)?([NSX])$', str(tok))
+                if not m:
+                    # Legacy behavior: treat as instruction only, len=1.0
+                    return (str(tok), 1.0)
+                length_str, instr = m.groups()
+                length = float(length_str) if length_str else 1.0
+                return (instr, length)
+
+            durations = []
             new_progression = []
             input_progression = progression[:] # 2.7 copy
-            pattern_mask = patterns[pattern]
+            # Parse tokens into (instruction, length_multiplier)
+            parsed_mask = [_parse_pattern_token(tok) for tok in patterns[pattern]]
+            print(parsed_mask, patterns[pattern])
             pattern_mask_index = 0
             current_chord = None
 
             while True:
-                pattern_instruction = pattern_mask[pattern_mask_index]
+                instr, len_mult = parsed_mask[pattern_mask_index]
 
-                if pattern_instruction == "N":
+                if instr == "N":
                     if len(input_progression) == 0:
                         break
                     current_chord = input_progression.pop(0)
                     new_progression.append(current_chord)
-                elif pattern_instruction == "S":
+                    durations.append(len_mult)
+                elif instr == "S":
                     new_progression.append(current_chord)
-                elif pattern_instruction == "X":
+                    durations.append(len_mult)
+                elif instr == "X":
                     new_progression.append("X")
+                    durations.append(len_mult)
 
-                if pattern_mask_index == len(pattern_mask) - 1:
+                if pattern_mask_index == len(parsed_mask) - 1:
                     pattern_mask_index = 0
                 else:
                     pattern_mask_index = pattern_mask_index + 1
             progression = new_progression
+        else:
+            # No pattern supplied: every step has length 1.0
+            durations = [1.0] * len(progression)
 
         # We do this to allow blank spaces
-        for chord in progression:
+        for i, chord in enumerate(progression):
 
             # This is for # 'I', 'VI', etc
             progression_chord = to_chords(chord, key)
@@ -208,6 +199,11 @@ class Chords2Midi(object):
                 chord_info['root'] = progression_chord[0][0]
             else:
                 chord_info['root'] = None
+            # Attach per-step length multiplier from the pattern expansion
+            try:
+                chord_info['step_len'] = float(durations[i])
+            except Exception:
+                chord_info['step_len'] = 1.0
             progression_chords.append(chord_info)
 
         # For each input..
@@ -216,9 +212,10 @@ class Chords2Midi(object):
 
             # Unpack object
             chord = chord_info['notes']
+            step_duration = base_duration * float(chord_info.get('step_len', 1.0))
             # NO_OP
             if chord == None:
-                bar=bar+1
+                bar = bar + step_duration
                 continue
             root = chord_info['root']
             root_pitch = pychord.utils.note_to_val(notes.int_to_note(notes.note_to_int(root)))
@@ -424,14 +421,14 @@ class Chords2Midi(object):
                         channel=channel,
                         pitch=pitch,
                         time=midi_time,
-                        duration=duration,
+                        duration=step_duration,
                         volume=volume
                     )
 
                 humanize_amount = humanize_amount + humanize_interval
                 if i + 1 >= num_notes:
                     break
-            bar = bar + 1
+            bar = bar + step_duration
             previous_pitches = pitches
 
         ##
