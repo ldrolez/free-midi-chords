@@ -151,6 +151,7 @@ prog_modal = [
     "bVIM bVIIm im bIIM =Mysterious Dark",
     "bVIM vi im bVIIM =Hopeful Mysterious",
     "bVIM7 ivmadd9 I I =Spiritual Nostalgic",
+    "I7 bIdom7 III7 ii7 V7 =Playful Surprised",
     "I bIIIM bVIIM I =Triumphant Rebellious",
     "I bIIIM bVIIM IV =Triumphant Mysterious",
     "I bIIIM bVIM bVIIM =Triumphant Hopeful",
