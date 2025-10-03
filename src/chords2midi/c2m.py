@@ -143,7 +143,6 @@ class Chords2Midi(object):
             input_progression = progression[:] # 2.7 copy
             # Parse tokens into (instruction, length_multiplier)
             parsed_mask = [_parse_pattern_token(tok) for tok in patterns[pattern]]
-            print(parsed_mask, patterns[pattern])
             pattern_mask_index = 0
             current_chord = None
 
