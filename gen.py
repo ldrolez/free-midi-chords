@@ -60,7 +60,7 @@ deg_maj = ['I', 'ii', 'iii', 'IV', 'V', 'vi', 'vii']
 deg_min = ['i', 'ii', 'III', 'iv', 'v', 'VI', 'VII']
 
 # progressions styles
-styles = [ '', 'basic4', 'alt4', 'hiphop' ]
+styles = [ '', 'pop', 'pop2', 'hiphop2', 'soul' ]
 
 # Test mode
 if len(sys.argv) > 1 and sys.argv[1] == '--test':
@@ -99,7 +99,7 @@ def genprog(dir, key, chords, prefix, style = ''):
         args.extend(["-d", "2", "-p", "basic"])
     else:    
         # no rests
-        args.extend(["-d", "4", "-p", "long"])
+        args.extend(["-d", "1", "-p", "long"])
     args.extend(["-t", "5", "-B",
         "--key", f"{key}", "-N", f"{prefix} - {chords}", "--output", 
         f"{dir}/{prefix} - {chords}{desc}.mid"])
