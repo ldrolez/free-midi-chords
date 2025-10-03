@@ -105,6 +105,7 @@ prog_min = [
     "i VII VI iv =Sad Romantic",
     "i VII VI VII =Rebellious Triumphant",
     "i7 VI III7 VII6 i i7 III7 iv7 =Dark Nostalgic",
+    "i7 VII VI7 iv7 =Nostalgic Romantic",
     "ii v i i =Peaceful Hopeful",
     "ii v i iv =Peaceful Nostalgic",
     "ii VI i iv =Sad Hopeful",
@@ -204,16 +205,17 @@ prog_modal = [
     "ivm im bviim bVIM =Dark",
     "vdim vdim ivm bIIIM =Fearful Mysterious",
     "vi bVIM bVIIM I =Hopeful Triumphant",
+    "vi IV I IIM =Hopeful Peaceful",
     "vi viim V vi #IVdim V =Nostalgic Dark",
     "VIM bVIM im bVIIM =Surprised Rebellious",
 
     # cadences
-    "bIIIM V7 I",
-    "bVIIM V7 I",
-    "im bVIIM IV im",
-    "ivm bIIIM bIIM I",
-    "ivm IIIM bIIM I",
-    "ivm bIIIM bVIM I",
+    "bIIIM V7 I =Cadence",
+    "bVIIM V7 I =Cadence",
+    "im bVIIM IV im =Cadence",
+    "ivm bIIIM bIIM I =Cadence",
+    "ivm IIIM bIIM I =Cadence",
+    "ivm bIIIM bVIM I =Cadence",
 ]
 
 # Chord Types
