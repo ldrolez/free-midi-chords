@@ -198,6 +198,7 @@ prog_modal = [
     "im V bVIIM IV bVIM bIIIM ivm V =Mysterious Rebellious",
     "im VIM bi V =Mysterious Triumphant",
     "im VIM IIIM bIIM =Nostalgic Surprised",
+    "im vm isus4 I =Hopeful Spiritual",
     "im vm bVIM bIIM =Mysterious Hopeful",
     "im vm ivm bIIM7 =Mysterious Dark",
     "IV V ii im bIIIM IV =Hopeful Nostalgic",
