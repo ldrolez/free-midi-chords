@@ -162,6 +162,7 @@ prog_modal = [
     "I bVIIM IV V =Joyful Triumphant",
     "I bVIM I bIIM =Surprised Mysterious",
     "I bVIM IV bIIIM bVIIM =Mysterious Nostalgic",
+    "I I7 I9 IV ivm =Romantic Nostalgic",
     "I I7 Idom7 IV ivm I =Relaxed Nostalgic",
     "I I7 Idom7 IV ivm I ivm6 Vdom7 =Relaxed Romantic",
     "I IIIM vi V =Joyful Hopeful",
