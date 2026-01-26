@@ -1,3 +1,5 @@
 MIDIUtil>=1.2.1
 mingus>=0.6.1
 pychord>=0.6.2
+mido>=1.3.3
+packaging>=24.2

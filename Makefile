@@ -14,8 +14,12 @@ dist: check
 	cp README.md LICENSE output/progression/4\ Progression
 	cd output/progression/4\ Progression; zip -r ../../../dist/free-midi-progressions-${DATE}.zip *
 
+ripchord:
+	python3 gen-ripchord.py
+	cd output/ripchord/; zip -r ../../dist/free-ripchord-progressions-${DATE}.zip *
+
 # Check for GIT version of python-mingus
 check:
 	@test -f ./python-mingus/README.md || { echo "To build the pack you will need the modified python-mingus library:\n git clone https://github.com/ldrolez/python-mingus.git" ; exit 1; }
 
-.PHONY: check dist
+.PHONY: check dist ripchord
