@@ -46,6 +46,7 @@ class Chords2Midi(object):
         parser.add_argument('-o', '--output', type=str, help='Set the output file path. Default is the current key and progression in the current location.')
         parser.add_argument('-O', '--offset', type=float, default=0.0, help='Set the amount to offset each chord, in ticks. (default 0.0)')
         parser.add_argument('-p', '--pattern', type=str, default=None, help='Set the pattern. Available patterns: ' + (', '.join(patterns.keys())))
+        parser.add_argument("--no-longeven", dest="longeven", action="store_false", default=True, help="Disable doubling the final chord length for odd progressions when using the long pattern")
         parser.add_argument('-r', '--reverse', action='store_true', default=False, help='Reverse a progression from C-D-E format into I-II-III format')
         parser.add_argument('-v', '--version', action='store_true', default=False,
             help='Display the current version of chords2midi')
@@ -110,6 +111,7 @@ class Chords2Midi(object):
         root_lowest = self.vargs.get('root_lowest', False)
         bassline = self.vargs['bassline']
         pattern = self.vargs['pattern']
+        longeven = self.vargs["longeven"]
 
         # Could be interesting to do multiple parts at once.
         midi = MIDIFile(1)
@@ -167,6 +169,12 @@ class Chords2Midi(object):
                 else:
                     pattern_mask_index = pattern_mask_index + 1
             progression = new_progression
+            # double the last not if odd number of chords
+            if pattern == "long" and longeven:
+                original_count = len([x for x in og_progression if str(x).strip() != ""])
+                if original_count % 2 == 1 and len(durations) > 0:
+                    durations[-1] = durations[-1] * 2.0
+
         else:
             # No pattern supplied: every step has length 1.0
             durations = [1.0] * len(progression)
