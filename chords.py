@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# Copyright (c) 2019-2025 Ludovic Drolez
+# Copyright (c) 2019-2026 Ludovic Drolez
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -69,6 +69,7 @@ prog_maj = [
     "V vi IV I =Hopeful Romantic",
     "vi ii V I =Hopeful Romantic",
     "vi IV I V =Hopeful Romantic",
+    "vi IV iii V =Hopeful Romantic",
     "vi V IV V ii V I I =Triumphant Hopeful",
     "vi V IV V =Romantic Hopeful",
 ]
@@ -167,6 +168,7 @@ prog_modal = [
     "I I7 I9 IV ivm =Romantic Nostalgic",
     "I I7 Idom7 IV ivm I =Relaxed Nostalgic",
     "I I7 Idom7 IV ivm I ivm6 Vdom7 =Relaxed Romantic",
+    "I im bVII6 bVIM =Nostalgic Mysterious",
     "I IIIM vi V =Joyful Hopeful",
     "I IIM iii V6 =Surprised Triumphant",
     "I IIM IV I =Joyful Triumphant",
@@ -176,6 +178,7 @@ prog_modal = [
     "I ivm bIIIM bVIIM =Mysterious Nostalgic",
     "I V bVIIM IV =Triumphant Rebellious",
     "I V ivm bVIM =Surprised Mysterious",
+    "I vi bVIM V =Surprised Mysterious",
     "I5 iii II5 #IVm IV5 vi V5 viim =Excited Triumphant",
     "ii bIIM I bVIIM =Mysterious Rebellious",
     "ii bVIIM7 I =Hopeful Triumphant",
@@ -184,6 +187,7 @@ prog_modal = [
     "im bIIIM bVIIM IV =Romantic Nostalgic",
     "im bIIIM bVIM V =Mysterious Triumphant",
     "im bIIIM IV bVIM =Mysterious Hopeful",
+    "im bIIIM IV V =Mysterious Triumphant",
     "im bIIIsus2 IV =Mysterious Hopeful",
     "im bIIM bIIIM bIIM =Mysterious Dark",
     "im bIIM biim6 ivm =Mysterious Tender",
@@ -191,6 +195,7 @@ prog_modal = [
     "im bIIM ivm IIIM bIIM ivm IIIM IIIM =Mysterious Nostalgic",
     "im bIIM vm im7 =Mysterious Dark",
     "im bVIIM bIIM vm =Mysterious Rebellious",
+    "im bVIIM IV im =Nostalgic Mysterious",
     "im bviim bVIM bIIM =Mysterious Hopeful",
     "im bVIM ivm V =Triumphant",
     "im ii vm IV =Nostalgic Hopeful",
