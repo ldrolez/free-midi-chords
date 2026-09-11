@@ -72,7 +72,8 @@ class Chords2Midi(object):
                 content = ''.join(fn.readlines()).strip()
                 content = content.replace('\n', ' ').replace(',', '  ')
                 progression = content.split(' ')
-        og_progression = progression
+        # Sanitize tokens for filenames (slash chords would break output paths)
+        og_progression = [c.replace('/', '_') for c in progression]
 
         # If we're reversing, we don't need any of the MIDI stuff.
         if self.vargs['reverse']:
@@ -182,8 +183,26 @@ class Chords2Midi(object):
         # We do this to allow blank spaces
         for i, chord in enumerate(progression):
 
+            # Slash chord notation: 'I/V' -> chord 'I' with bass root of 'V'
+            bass_root = None
+            if '/' in chord:
+                base_chord, bass_part = chord.split('/', 1)
+                try:
+                    bass_chord = to_chords(bass_part, key)
+                except Exception:
+                    bass_chord = []
+                if bass_chord != []:
+                    bass_root = bass_chord[0][0]
+                elif notes.is_valid_note(bass_part):
+                    bass_root = bass_part
+                else:
+                    print("Invalid bass note '" + bass_part + "' in chord '" + chord + "'")
+                    return
+            else:
+                base_chord = chord
+
             # This is for # 'I', 'VI', etc
-            progression_chord = to_chords(chord, key)
+            progression_chord = to_chords(base_chord, key)
             if progression_chord != []:
                 has_number = True
 
@@ -206,6 +225,17 @@ class Chords2Midi(object):
                 chord_info['root'] = progression_chord[0][0]
             else:
                 chord_info['root'] = None
+
+            # Slash chord: rotate the voicing so the bass note is at the
+            # bottom (unless -B is on, where it is a separate bassline note)
+            if bass_root and chord_info['notes'] and not bassline:
+                if bass_root in chord_info['notes']:
+                    idx = chord_info['notes'].index(bass_root)
+                    chord_info['notes'] = chord_info['notes'][idx:] + chord_info['notes'][:idx]
+                else:
+                    chord_info['notes'] = [bass_root] + chord_info['notes']
+            if bass_root:
+                chord_info['bass_root'] = bass_root
             # Attach per-step length multiplier from the pattern expansion
             try:
                 chord_info['step_len'] = float(durations[i])
@@ -224,7 +254,8 @@ class Chords2Midi(object):
             if chord == None:
                 bar = bar + step_duration
                 continue
-            root = chord_info['root']
+            # With a slash chord, the bassline note is the root after the slash
+            root = chord_info.get('bass_root') or chord_info['root']
             root_pitch = pychord.utils.note_to_val(notes.int_to_note(notes.note_to_int(root)))
 
             # Reset internals
