@@ -142,12 +142,15 @@ class Chords2Midi(object):
                 return (instr, length)
 
             durations = []
+            input_indices = []
             new_progression = []
             input_progression = progression[:] # 2.7 copy
             # Parse tokens into (instruction, length_multiplier)
             parsed_mask = [_parse_pattern_token(tok) for tok in patterns[pattern]]
             pattern_mask_index = 0
             current_chord = None
+            current_input_index = None
+            original_index = 0
 
             while True:
                 instr, len_mult = parsed_mask[pattern_mask_index]
@@ -156,13 +159,18 @@ class Chords2Midi(object):
                     if len(input_progression) == 0:
                         break
                     current_chord = input_progression.pop(0)
+                    current_input_index = original_index
+                    original_index = original_index + 1
                     new_progression.append(current_chord)
+                    input_indices.append(current_input_index)
                     durations.append(len_mult)
                 elif instr == "S":
                     new_progression.append(current_chord)
+                    input_indices.append(current_input_index)
                     durations.append(len_mult)
                 elif instr == "X":
                     new_progression.append("X")
+                    input_indices.append(None)
                     durations.append(len_mult)
 
                 if pattern_mask_index == len(parsed_mask) - 1:
@@ -179,6 +187,7 @@ class Chords2Midi(object):
         else:
             # No pattern supplied: every step has length 1.0
             durations = [1.0] * len(progression)
+            input_indices = list(range(len(progression)))
 
         # We do this to allow blank spaces
         for i, chord in enumerate(progression):
@@ -245,6 +254,7 @@ class Chords2Midi(object):
 
         # For each input..
         previous_pitches = []
+        used_voicings = {} # root pitch-class -> list of used voicings (sorted pitch tuples)
         for chord_index, chord_info in enumerate(progression_chords):
 
             # Unpack object
@@ -424,6 +434,24 @@ class Chords2Midi(object):
                                 pitches.append(new_pitch)
                             else:
                                 pitches.append(new_pitch + 12)
+
+            # Inversion ratchet: on every 4th input chord, if this voicing
+            # duplicates an earlier voicing of the same chord, move the lowest
+            # note up an octave so repeated chords climb instead of repeating.
+            root_pc = pychord.utils.note_to_val(notes.int_to_note(notes.note_to_int(chord_info['root']))) % 12 if chord_info.get('root') else None
+            input_index = input_indices[chord_index] if chord_index < len(input_indices) else chord_index
+            if root_pc is not None and input_index is not None and (input_index + 1) % 4 == 0:
+                voicing = tuple(sorted(pitches))
+                if voicing in used_voicings.get(root_pc, []):
+                    # Fold the lowest note up; try twice in case the first
+                    # fold lands on yet another used voicing.
+                    for _ in range(2):
+                        lowest = min(pitches)
+                        pitches[pitches.index(lowest)] = lowest + 12
+                        if tuple(sorted(pitches)) not in used_voicings.get(root_pc, []):
+                            break
+            if root_pc is not None:
+                used_voicings.setdefault(root_pc, []).append(tuple(sorted(pitches)))
 
             # find if two pitches are 1 semitone apart to avoid dissonances
             length = len(pitches)
