@@ -100,9 +100,10 @@ def genprog(dir, key, chords, prefix, style = ''):
     else:    
         # no rests
         args.extend(["-d", "1", "-p", "long"])
+    chords_e = chords.replace("/", "_")
     args.extend(["-t", "5", "-B",
         "--key", f"{key}", "-N", f"{prefix} - {chords}", "--output", 
-        f"{dir}/{prefix} - {chords}{desc}.mid"])
+        f"{dir}/{prefix} - {chords_e}{desc}.mid"])
     if not os.path.exists(dir):
         os.makedirs(dir)
     c2m_obj.handle(args)

@@ -15,6 +15,7 @@ dist: check
 	cd output/progression/4\ Progression; zip -r ../../../dist/free-midi-progressions-${DATE}.zip *
 
 ripchord:
+	mkdir -p output/ripchord/
 	python3 gen-ripchord.py
 	cd output/ripchord/; zip -r ../../dist/free-ripchord-progressions-${DATE}.zip *
 
