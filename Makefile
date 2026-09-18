@@ -23,4 +23,9 @@ ripchord:
 check:
 	@test -f ./python-mingus/README.md || { echo "To build the pack you will need the modified python-mingus library:\n git clone https://github.com/ldrolez/python-mingus.git" ; exit 1; }
 
-.PHONY: check dist ripchord
+# Machine readable index of the built pack (release asset: dist/free-midi-progressions-${DATE}.json).
+# Run after 'make dist'; indexes the newest archive in dist/, or output/ when there is none.
+index:
+	env PYTHONPATH=python-mingus/ python3 skills/music-theory/scripts/build_index.py --read-midi --jsonl
+
+.PHONY: check dist ripchord index
