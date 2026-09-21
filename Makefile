@@ -24,7 +24,9 @@ check:
 
 # Machine readable index of the built pack (release asset: dist/free-midi-progressions-${DATE}.json).
 # Run after 'make dist'; indexes the newest archive in dist/, or output/ when there is none.
+# --shards also writes dist/free-midi-progressions-${DATE}/: a manifest plus one file per key and
+# mode, so a consumer (or an agent) reads only the slice a query needs instead of the whole index.
 index:
-	env PYTHONPATH=python-mingus/ python3 skills/music-theory/scripts/build_index.py --read-midi --jsonl
+	env PYTHONPATH=python-mingus/ python3 skills/music-theory/scripts/build_index.py --read-midi --jsonl --shards
 
 .PHONY: check dist ripchord index

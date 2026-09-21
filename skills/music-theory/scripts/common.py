@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import collections
 import datetime
+import json
 import os
 import re
 import sys
@@ -18,6 +19,9 @@ from pathlib import Path
 
 REPO_ENV = "FREE_MIDI_CHORDS_REPO"
 PACK_ENV = "FREE_MIDI_CHORDS_PACK"
+# A sharded index is a directory next to the flat one holding this manifest plus one file
+# per slice, so a query reads only the slice it needs instead of the whole index.
+MANIFEST_NAME = "manifest.json"
 
 MODES = ("major", "minor", "modal")
 # Rhythm variants the pack ships as subdirectories ("plain" = no subdirectory).
@@ -63,6 +67,14 @@ def repo_root(explicit: str | None = None) -> Path:
         "  git clone https://github.com/ldrolez/free-midi-chords.git\n"
         f"  or set {REPO_ENV}=<path to the clone>"
     )
+
+
+def repo_root_or_none(explicit: str | None = None) -> Path | None:
+    """repo_root without the exit: for scripts that can work from an index alone."""
+    try:
+        return repo_root(explicit)
+    except SystemExit:
+        return None
 
 
 def use_toolchain(repo: Path) -> None:
@@ -250,16 +262,113 @@ def validate_tokens(tokens) -> list[tuple[str, str]]:
     return bad
 
 
-def find_index(repo: Path, explicit: str | None = None) -> Path:
+def manifest_of(path: Path) -> Path | None:
+    """The manifest of a sharded index, given either its directory or the manifest itself."""
+    if path.is_dir() and (path / MANIFEST_NAME).is_file():
+        return path / MANIFEST_NAME
+    if path.is_file() and path.name == MANIFEST_NAME:
+        return path
+    return None
+
+
+def find_index(repo: Path | None, explicit: str | None = None) -> Path:
     """Locate a generated index: the flag, then the newest in `dist/` (written by
-    `make index`), then the newest in `index/` (a locally kept copy)."""
+    `make index`), then the newest in `index/` (a locally kept copy).
+
+    Returns either a flat `.json` or the `manifest.json` of a sharded index - a sharded
+    index is a directory, so both forms are searched and the newer one wins. `repo` may be
+    None when `explicit` is given, so a consumer that was handed an index needs no checkout.
+    """
     if explicit:
-        return Path(explicit)
+        path = Path(explicit)
+        if not path.exists():
+            raise SystemExit(f"no such index: {path}")
+        return manifest_of(path) or path
+    if repo is None:
+        raise SystemExit("no index found - pass --index, or point --repo / "
+                         f"{REPO_ENV} at a free-midi-chords checkout")
     for directory in ("dist", "index"):
-        candidates = sorted((Path(repo) / directory).glob("free-midi-*.json"),
-                            key=lambda p: p.stat().st_mtime)
+        base = Path(repo) / directory
+        candidates = list(base.glob("free-midi-*.json"))
+        candidates += list(base.glob(f"free-midi-*/{MANIFEST_NAME}"))
         if candidates:
-            return candidates[-1]
+            return max(candidates, key=lambda p: p.stat().st_mtime)
     raise SystemExit(
         "no index found - run `make index` (or skills/music-theory/scripts/build_index.py) first"
     )
+
+
+def select_slices(manifest: dict, *, mode: str | None = None, keys=None, tags=None,
+                  kinds=("progression", "chord")) -> list[dict]:
+    """The slices of a sharded index a query can possibly match.
+
+    `mode` and `key` are the slice key, so they prune exactly. `tags` prunes
+    conservatively: an entry carries all of its tags, so a slice whose histogram has no
+    overlap with the wanted tags cannot hold a match - but overlap is not a match, so the
+    caller still filters the entries it reads. Pass the wanted keys in the pack's own
+    spelling, aliases included (`find_progressions.py` normalises enharmonics first).
+    """
+    wanted = []
+    for record in manifest.get("slices", ()):
+        if record.get("kind") not in kinds:
+            continue
+        if mode and record.get("mode") != mode:
+            continue
+        if keys is not None and record.get("kind") == "progression" and record.get("key") not in keys:
+            continue
+        if tags and not any((record.get("tags") or {}).get(t) for t in tags):
+            continue
+        wanted.append(record)
+    return wanted
+
+
+def load_index(repo: Path | None, explicit: str | None = None, *, mode=None, keys=None, tags=None,
+               kinds=("progression", "chord"), entries: bool = True) -> dict:
+    """Load an index, reading only the slices a query needs when it is sharded.
+
+    A flat index is read whole (there is nothing to prune). A sharded one reads the
+    manifest, then only the slice files `select_slices` keeps. Returns the header fields
+    as `meta`, the entries as `entries`, and the slice records actually read, plus the
+    bytes read against the bytes in the whole index - so a caller can report the
+    difference instead of claiming it.
+    """
+    path = find_index(repo, explicit)
+    if path.name == MANIFEST_NAME:
+        manifest = json.loads(path.read_text(encoding="utf-8"))
+        shard_dir = path.parent
+        wanted = select_slices(manifest, mode=mode, keys=keys, tags=tags, kinds=kinds)
+        rows, nbytes = [], 0
+        if entries:
+            for record in wanted:
+                data = (shard_dir / record["slice"]).read_bytes()
+                nbytes += len(data)
+                rows += json.loads(data)
+        return {
+            "path": path, "sharded": True, "meta": {k: v for k, v in manifest.items() if k != "slices"},
+            "entries": rows, "slices": wanted, "slices_total": len(manifest.get("slices", ())),
+            "bytes_read": nbytes,
+            "bytes_total": sum(r.get("bytes", 0) for r in manifest.get("slices", ())),
+        }
+
+    index = json.loads(path.read_text(encoding="utf-8"))
+    rows = []
+    if "progression" in kinds:
+        rows += index.get("progressions", [])
+    if "chord" in kinds:
+        rows += index.get("chords", [])
+    size = path.stat().st_size
+    return {
+        "path": path, "sharded": False, "meta": {k: v for k, v in index.items()
+                                                 if k not in ("progressions", "chords")},
+        "entries": rows, "slices": [], "slices_total": 0,
+        "bytes_read": size if entries else 0, "bytes_total": size,
+    }
+
+
+def human_bytes(count: int) -> str:
+    """Bytes at 1024, labelled correctly (KiB/MiB) - 'MB' for a 1024-based figure is a lie."""
+    for unit in ("B", "KiB", "MiB", "GiB"):
+        if count < 1024 or unit == "GiB":
+            return f"{count:.0f} {unit}" if unit == "B" else f"{count:.1f} {unit}"
+        count /= 1024
+    return f"{count:.1f} GiB"

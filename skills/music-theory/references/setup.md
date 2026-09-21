@@ -20,6 +20,25 @@ and `make index` then indexes whatever it built. To work against a *released* pa
 the release archive in `packs/` — with no `--pack`, the scripts index the freshest thing they can
 find (an archive in `dist/`, the built `output/` tree, or an archive in `packs/`).
 
+## What each script actually needs
+
+Only the two engine paths need the fork. Searching an existing index does not:
+
+| Script | Needs |
+| --- | --- |
+| `find_progressions.py` | `python3` and an index — `--index` works with no checkout, no fork, no pack |
+| `build_index.py` | `python3` and a pack archive or `output/` tree (`mido` for `--read-midi`, `git` for `source_rev`) |
+| `render.py`, `verify_pack.py` | the checkout, `python-mingus/`, and `requirements.txt` |
+
+`requirements.txt` is the entire third-party list; `python-mingus` is the only thing outside it.
+Nothing in the skill touches the network, plays audio, or needs a DAW.
+
+`--read-midi` is the one flag whose dependency is easy to lose: it reads each file's tempo with
+`mido`, which lives in the interpreter, not the repo. `make index` calls plain `python3`, so on a
+machine where that is a system python without `mido` the build succeeds with `bpm` null for every
+file — it now warns and prints `bpm : 0/11400 files (no tempo read)`. Run the target inside the
+venv (or with `python3` resolving there) to get the real `80`.
+
 `FREE_MIDI_CHORDS_REPO` overrides the checkout location and `FREE_MIDI_CHORDS_PACK` the pack to
 index; the scripts otherwise find the checkout from their own parent directories.
 

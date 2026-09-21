@@ -6,6 +6,11 @@
     python skills/music-theory/scripts/find_progressions.py --tags dark --mode minor --key D --limit 10
     python skills/music-theory/scripts/find_progressions.py --tags joyful --style pop2 --format json
     python skills/music-theory/scripts/find_progressions.py --tags nostaligc            # typo -> suggestions
+
+`--index` takes either the flat `free-midi-progressions-<date>.json` or the shard
+directory `free-midi-progressions-<date>/`. With shards, only the slices the query can
+match are read - `--mode`/`--key` prune exactly, `--tags` prunes conservatively - and the
+bytes read are reported on stderr, so "load only the slice it needs" is checkable.
 """
 
 from __future__ import annotations
@@ -17,12 +22,9 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import ENHARMONIC, PACK_STYLES, find_index, repo_root  # noqa: E402
-
-
-def load(args):
-    path = find_index(repo_root(args.repo), args.index)
-    return json.loads(Path(path).read_text(encoding="utf-8")), path
+from common import (  # noqa: E402
+    ENHARMONIC, PACK_STYLES, human_bytes, load_index, repo_root_or_none,
+)
 
 
 def normalize_keys(keys):
@@ -34,9 +36,38 @@ def normalize_keys(keys):
     return wanted
 
 
+def tags_of(args):
+    """The tags this query must see - the slice pruning bound (excludes never prune)."""
+    wanted = set()
+    for field in ("tags", "tags_any"):
+        value = getattr(args, field)
+        if value:
+            wanted |= {t.strip().lower() for t in value.split(",") if t.strip()}
+    return wanted or None
+
+
+def split(value):
+    return {v.strip() for v in value.split(",") if v.strip()}
+
+
+def print_slices(loaded, path):
+    if not loaded["sharded"]:
+        print(f"{path} is a flat index - one file, nothing to slice.\n"
+              "Rebuild with `--shards` (or `make index`) to get one file per key/mode.")
+        return 0
+    print(f"{path}  ({loaded['meta']['version']}, {loaded['slices_total']} slices, "
+          f"{human_bytes(loaded['bytes_total'])})")
+    print(f"{'slice':<32} {'mode':<6} {'key':<4} {'n':>5} {'bytes':>9}  tags")
+    for record in loaded["slices"]:
+        top = ", ".join(f"{tag} {count}" for tag, count in list((record.get("tags") or {}).items())[:3])
+        print(f"{record['slice']:<32} {record.get('mode', ''):<6} {record.get('key', ''):<4} "
+              f"{record['entries']:>5} {human_bytes(record['bytes']):>9}  {top}")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--index", help="index .json (default: newest in <repo>/index)")
+    ap.add_argument("--index", help="flat index .json, or a shard directory (default: newest in dist/, then index/)")
     ap.add_argument("--repo", help="free-midi-chords checkout")
     ap.add_argument("--tags", help="comma-separated mood tags, ALL must match")
     ap.add_argument("--tags-any", help="comma-separated mood tags, ANY may match")
@@ -55,13 +86,23 @@ def main() -> int:
     ap.add_argument("--no-group", dest="group", action="store_false")
     ap.add_argument("--format", choices=["table", "json", "numerals", "paths"], default="table")
     ap.add_argument("--vocab", action="store_true", help="print the tag vocabulary with counts")
+    ap.add_argument("--slices", dest="slices", action="store_true",
+                    help="print the index's slices and what each holds (manifest only, no data read)")
     args = ap.parse_args()
 
-    index, path = load(args)
-    entries = index["progressions"]
+    repo = repo_root_or_none(args.repo)  # an explicit --index works with no checkout at all
+    keys = normalize_keys(split(args.key)) if args.key else None
+    meta_only = bool(args.vocab or args.slices)
+    loaded = load_index(repo, args.index, mode=args.mode, keys=keys, tags=tags_of(args),
+                        kinds=("progression",), entries=not meta_only)
+    index, path, entries = loaded["meta"], loaded["path"], loaded["entries"]
+
+    if args.slices:
+        return print_slices(loaded, path)
 
     if args.vocab:
-        print(f"{path}  ({index['version']}, {len(entries)} progression files)")
+        print(f"{path}  ({index['version']}, {index['counts']['progressions']} progression files"
+              f"{', manifest only - no slice read' if loaded['sharded'] else ''})")
         for tag, count in index["tag_vocabulary"].items():
             print(f"  {tag:<12} {count}")
         return 0
@@ -87,9 +128,9 @@ def main() -> int:
             return False
         if args.mode and e["mode"] != args.mode:
             return False
-        if args.key and e["key"] not in normalize_keys({k.strip() for k in args.key.split(",")}):
+        if args.key and e["key"] not in keys:
             return False
-        if args.style and e["style"] not in {s.strip() for s in args.style.split(",")}:
+        if args.style and e["style"] not in split(args.style):
             return False
         if args.new is not None and e["new"] != args.new:
             return False
@@ -116,7 +157,12 @@ def main() -> int:
     else:
         rows = hits
 
-    print(f"# {path} | version {index['version']} | {len(hits)} pack files"
+    print(f"# {path} | version {index['version']} | "
+          + (f"{len(loaded['slices'])}/{loaded['slices_total']} slices, "
+             f"{human_bytes(loaded['bytes_read'])} of {human_bytes(loaded['bytes_total'])} read | "
+             if loaded["sharded"] else
+             f"flat index, {human_bytes(loaded['bytes_read'])} read | ")
+          + f"{len(hits)} pack files"
           + (f" -> {len(rows)} unique progressions" if group else ""), file=sys.stderr)
     shown = rows if args.limit == 0 else rows[: args.limit]
 

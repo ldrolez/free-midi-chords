@@ -22,7 +22,9 @@ from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from common import Source, find_index, find_source, load_c2m, repo_root  # noqa: E402
+from common import (  # noqa: E402
+    Source, find_source, human_bytes, load_c2m, load_index, repo_root,
+)
 
 
 def note_grid(source) -> list[tuple[int, int, int]]:
@@ -71,14 +73,14 @@ def main() -> int:
     args = ap.parse_args()
 
     repo = repo_root(args.repo)
-    index_path = find_index(repo, args.index)
-    index = json.loads(Path(index_path).read_text(encoding="utf-8"))
+    loaded = load_index(repo, args.index, mode=args.mode, kinds=("progression",))
+    index_path, meta, all_entries = loaded["path"], loaded["meta"], loaded["entries"]
     pack = find_source(repo, args.pack)
     c2m = load_c2m(repo)
 
     with Source(pack) as source:
         shipped_names = set(source.names())
-        entries = [e for e in index["progressions"]
+        entries = [e for e in all_entries
                    if e["path"] in shipped_names
                    and (not args.mode or e["mode"] == args.mode)
                    and (not args.style or e["style"] == args.style)]
@@ -121,7 +123,9 @@ def main() -> int:
                 counts[record["status"]] += 1
 
     print(f"pack  : {pack}")
-    print(f"index : {index_path} ({index['version']})")
+    print(f"index : {index_path} ({meta['version']})"
+          + (f" - {len(loaded['slices'])}/{loaded['slices_total']} slices, "
+             f"{human_bytes(loaded['bytes_read'])} read" if loaded["sharded"] else ""))
     print(f"checked {len(results)} progression files")
     for status, count in counts.most_common():
         print(f"  {status:<14} {count}")

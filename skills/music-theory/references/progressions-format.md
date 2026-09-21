@@ -25,6 +25,36 @@ Counts are per-file, not per-progression: each progression exists in 12 keys x 5
 "Hopeful 3180" means 265 progression-files per mode group. Use `find_progressions.py --vocab`
 rather than reciting numbers from memory.
 
+## Index layout (`make index`)
+
+Two forms, one build. The flat file is the release asset; the shard directory is the read path.
+
+```
+dist/free-midi-progressions-20260918.json     schema 1, every progression + chords, 5,005,806 B
+dist/free-midi-progressions-20260918/
+├── manifest.json                             header + one record per slice (no payload), 21,138 B
+├── progressions/<mode>-<key>.json            one per mode x key: 36 slices, 101,092–175,200 B
+└── chords.json                               chord-library slice, only when the input has one
+```
+
+Manifest record for a slice — enough to decide whether to read it:
+
+```json
+{"slice": "progressions/modal-Db.json", "kind": "progression", "mode": "modal", "key": "Db",
+ "entries": 410, "bytes": 175200, "sha256": "bc5544f1…",
+ "tags": {"mysterious": 205, "nostalgic": 100, "triumphant": 95, "hopeful": 85, "surprised": 60}}
+```
+
+- `mode`/`key` are the slice key, so a query prunes exactly; `tags` is a per-slice marginal
+  histogram, so tag pruning is a superset filter — read the slice, still filter its entries.
+- `bytes` + `sha256` describe the file on disk (both are written as UTF-8 bytes, LF, so the
+  hash matches on any platform).
+- Slices partition the entries: their union is the flat file's `progressions` array, entry for
+  entry. `dist/` is a build output, so the whole directory is regenerated on the next
+  `make index`.
+- `find_progressions.py --index <dir|manifest.json>` and `verify_pack.py --index <dir>` read
+  slices; either script also still takes the flat `.json`.
+
 ## Parsing without the index
 
 `common.parse_entry(path)` returns the full record (`kind, key, mode, style, numerals, tokens,

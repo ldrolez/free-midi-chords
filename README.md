@@ -57,7 +57,7 @@ mood prompt to rendered MIDI, driving the same `src/chords2midi` that builds thi
 
 ```bash
 make dist     # build the pack into output/ and zip it into dist/
-make index    # -> dist/free-midi-progressions-YYYYMMDD.json (+ .jsonl)
+make index    # -> dist/free-midi-progressions-YYYYMMDD.json (+ .jsonl, + a shard directory)
 ```
 
 The index is written next to the release archives so it can be attached to a release, and it is a
@@ -70,6 +70,13 @@ consumer can assert it read the pack it reasoned about.
  "tags": ["joyful", "triumphant"], "new": false, "length": 8,
  "path": "Major/Bb - I I IM-5 IM-5 IV IV V Vsus2 - Joyful Triumphant.mid", "sha256": "..."}
 ```
+
+The same run also writes `dist/free-midi-progressions-YYYYMMDD/`: a `manifest.json` with one record
+per slice, plus one file per mode and key (`progressions/modal-Db.json`, ~171 KB). The single
+`.json` is the release asset; the directory is the read path, so a script or an agent loads the
+slice a query needs instead of all 11,400 rows — `progressions/major-C.json` for "C major", or the
+12 modal slices when asking for one mood. `skills/music-theory/scripts/find_progressions.py`
+reports the bytes it read, so the saving is measurable rather than claimed.
 
 ## How to contribute
 

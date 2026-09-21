@@ -23,7 +23,7 @@ Commands below run from the repository root; the scripts find the checkout thems
 | Chord type numerals cannot spell (`7-5`, `add11`, `m7b9b5`, `9sus4`) | `render.py --symbols "F7-5 Cmaj7"` |
 | Hand-written absolute chords, want the numerals | `render.py --reverse "C Am F G"` |
 | Read the numerals as concrete pitches | `render.py --expand` |
-| Ask what the pack actually contains | `make index` then `find_progressions.py --vocab` |
+| Ask what the pack actually contains | `find_progressions.py --vocab` / `--slices` — both answer from the index manifest alone |
 | Claim the pack is reproducible | `verify_pack.py` (never assert this without its output) |
 | Mood words on percussion/bass instead of chords | Out of scope — this pack is chords only |
 
@@ -40,6 +40,23 @@ Read [references/setup.md](references/setup.md). The `python-mingus` fork is **n
 with stock `pip install mingus` the pack's own first Major progression fails with
 `KeyError: 'M-5'`, and `bVIM7 ivmadd9 I` fails with `KeyError: 'madd9'`.
 
+## What this skill depends on
+
+Declared per path, because the search path is deliberately the cheap one.
+
+| Path | Hard requirements | Optional |
+| --- | --- | --- |
+| `find_progressions.py` — search, `--vocab`, `--slices` | `python3` (3.8+; annotations are deferred, run on 3.10.11 / 3.11.15 / 3.14.6) and a generated index | nothing else — no `mingus`, no `chords2midi`, no pack archive, no MIDI file, no network, and no checkout at all when `--index` is given |
+| `build_index.py` — `make index` | `python3` and a pack archive or a built `output/` tree | `mido` for `--read-midi`; `git` for `source_rev` |
+| `render.py` | a checkout, the `python-mingus` fork beside it, and `requirements.txt` (`mido`, `MIDIUtil`, `pychord`, `mingus`, `packaging`) | — |
+| `verify_pack.py` | everything `render.py` needs, plus a pack archive or `output/` tree, plus an index | — |
+
+`requirements.txt` is the whole third-party list and `python-mingus` is the only thing outside it
+(see [references/setup.md](references/setup.md)). Nothing here touches the network, plays audio or
+needs a DAW: the render path writes a `.mid` and returns a JSON summary, nothing more. The split is
+on purpose — an agent can be handed an index, or just the slice it needs, and search with a bare
+`python3`.
+
 ## Build or reuse the index
 
 The pack ships no manifest — key, mode, numerals, mood tags and style exist only in filenames.
@@ -48,7 +65,8 @@ The pack ships no manifest — key, mode, numerals, mood tags and style exist on
 make index                                             # after make dist -> dist/free-midi-progressions-<date>.json
 python skills/music-theory/scripts/build_index.py       # freshest of dist/, output/, packs/
 python skills/music-theory/scripts/build_index.py --pack ~/Downloads/free-midi-chords-20260314.zip
-python skills/music-theory/scripts/build_index.py --read-midi --jsonl --csv
+python skills/music-theory/scripts/build_index.py --read-midi --jsonl --csv --shards
+python skills/music-theory/scripts/find_progressions.py --slices
 python skills/music-theory/scripts/find_progressions.py --vocab
 python skills/music-theory/scripts/find_progressions.py --tags nostalgic,hopeful --format numerals
 python skills/music-theory/scripts/find_progressions.py --tags dark --mode minor --key D --limit 10
@@ -57,6 +75,33 @@ python skills/music-theory/scripts/find_progressions.py --tags dark --mode minor
 A release `.zip` and a built `output/` tree are interchangeable inputs. The index is a build
 output, never a source of truth: `chords.py` / `gen.py` stay authoritative, so it cannot disagree
 with the pack for longer than one `make index`.
+
+### Read the slice, not the index
+
+`--shards` (which `make index` passes) writes a second form beside the flat file: a
+`manifest.json` plus one file per mode and key — `progressions/modal-Db.json`. The flat `.json`
+stays the release asset (one file to attach); the shard directory is the read path, because a
+request almost never needs all 11,400 rows:
+
+| Query | Files read | Bytes read |
+| --- | --- | --- |
+| `--mode modal --key A --tags nostalgic` | 1 of 36 | 170 KiB of 4.5 MiB |
+| `--tags anguished` (rarest tag in the pack) | 12 of 36 | 2.0 MiB of 4.5 MiB |
+| `--tags nostalgic,hopeful` (both present in every slice) | 36 of 36 | 4.5 MiB of 4.5 MiB |
+
+`--mode` / `--key` prune exactly — they are the slice key. `--tags` prunes on the per-slice tag
+histogram in the manifest, which is a superset filter, so entries are still filtered after
+loading (`--exclude-tags` never prunes). `--vocab` and `--slices` answer from the manifest alone
+and read no slice at all. The stderr header reports what was read —
+`# … 1/36 slices, 170.3 KiB of 4.5 MiB read | 100 pack files` — so this is checkable, not asserted.
+
+`--index` takes the flat `.json`, the shard directory, or its `manifest.json`; with no flag the
+newer of the two forms in `dist/` wins. Given an index, `find_progressions.py` needs no checkout.
+
+`--read-midi` fills `bpm` with `mido`, which lives in the interpreter rather than the repo: run it
+under a python without `mido` and every `bpm` is silently null. The build now warns and prints
+`bpm : 0/11400 files (no tempo read)` — read that line before quoting a tempo (the shipped pack is
+all 80).
 
 Default output groups by progression (one row per numerals, with the styles and key count that
 carry it). Tag typos are reported with suggestions; keys are enharmonic-aware (`C#` matches `Db`).
