@@ -1,6 +1,6 @@
 # SHLD Free MIDI Chord Packs
 
-Now over than 13000 MIDI files and 190 chord progressions per key! This is a collaborative project to create a collection of all chords
+Now over than 13000 MIDI files and 195 chord progressions per key! This is a collaborative project to create a collection of all chords
 and useful chord progressions in all keys, as MIDI files, usable with your favorite DAW. 
 Each progression comes with mood-based tags, yes you can finally find that "nostalgic but hopeful" progression without scrolling for hours.
 New progressions are now tagged with 'New'.
