@@ -9,4 +9,8 @@ assignees: ''
 
 ** Which Chord progression would you like to add to the pack? **
 
-I-V-iv-VI
+X-X-X-X
+
+** Have you checked that this progression isn’t already in the pack? **
+
+Yes/No
