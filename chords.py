@@ -204,7 +204,7 @@ prog_modal = [
     "im bIIM ivm IIIM bIIM ivm IIIM IIIM =Mysterious Nostalgic",
     "im bIIM vm im7 =Mysterious Dark",
     "im bVIIM bIIM vm =Mysterious Rebellious",
-    "im bVIIM IV im =Nostalgic Mysterious",
+    "im bVIIM IV im =Nostalgic Mysterious Cadence",
     "im bviim bVIM bIIM =Mysterious Hopeful",
     "im bVIM im IV =Nostalgic Hopeful",
     "im bVIM ivm V =Triumphant",
@@ -233,7 +233,6 @@ prog_modal = [
     # cadences
     "bIIIM V7 I =Cadence",
     "bVIIM V7 I =Cadence",
-    "im bVIIM IV im =Cadence",
     "ivm bIIIM bIIM I =Cadence",
     "ivm IIIM bIIM I =Cadence",
     "ivm bIIIM bVIM I =Cadence",
