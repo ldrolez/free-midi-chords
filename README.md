@@ -48,6 +48,36 @@ Below the progressions directory, you'll find 4 more directories. They contain t
 
 In the file free-midi-progressions-YYYYMMDD, you'll find only chord progressions in all the keys in a single directory. This way it's easier to import them in your Akai MPC, Roland MC-707 or MC-101 for example. 
 
+## Progression index and tooling
+
+Everything a progression knows about itself — key, mode, numerals, mood tags, rhythm style — lives
+only in its filename. `make index` turns that into a machine-readable index of the pack, and a
+small Agent Skill in [`skills/music-theory/`](skills/music-theory/SKILL.md) uses it to go from a
+mood prompt to rendered MIDI, driving the same `src/chords2midi` that builds this pack.
+
+```bash
+make dist     # build the pack into output/ and zip it into dist/
+make index    # -> dist/free-midi-progressions-YYYYMMDD.json (+ .jsonl, + a shard directory)
+```
+
+The index is written next to the release archives so it can be attached to a release, and it is a
+build output only: `chords.py` / `gen.py` stay authoritative. Each file carries its `sha256`, so a
+consumer can assert it read the pack it reasoned about.
+
+```json
+{"key": "Bb", "mode": "major", "style": "plain",
+ "numerals": "I I IM-5 IM-5 IV IV V Vsus2", "tokens": ["I", "I", "IM-5", "..."],
+ "tags": ["joyful", "triumphant"], "new": false, "length": 8,
+ "path": "Major/Bb - I I IM-5 IM-5 IV IV V Vsus2 - Joyful Triumphant.mid", "sha256": "..."}
+```
+
+The same run also writes `dist/free-midi-progressions-YYYYMMDD/`: a `manifest.json` with one record
+per slice, plus one file per mode and key (`progressions/modal-Db.json`, ~171 KB). The single
+`.json` is the release asset; the directory is the read path, so a script or an agent loads the
+slice a query needs instead of all 11,400 rows — `progressions/major-C.json` for "C major", or the
+12 modal slices when asking for one mood. `skills/music-theory/scripts/find_progressions.py`
+reports the bytes it read, so the saving is measurable rather than claimed.
+
 ## How to contribute
 
 To suggest new chords for the next chord pack:

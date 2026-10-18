@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "note": "Example composition request. Consumed by the music-theory skill: mood -> index search -> numerals -> render.",
+  "brief": "A nostalgic but hopeful ending theme, warm and slightly unresolved",
+  "mood": {
+    "all_of": ["nostalgic", "hopeful"],
+    "none_of": ["dark", "fearful"]
+  },
+  "key": "Db",
+  "mode": "modal",
+  "rhythm": {
+    "style": "pop2",
+    "bpm": 92,
+    "bars_per_chord": 1
+  },
+  "constraints": {
+    "min_chords": 4,
+    "max_chords": 8,
+    "must_end_on": "I"
+  },
+  "instrumentation": {
+    "role": "harmonic bed for a string pad + piano",
+    "engine_flags": ["-B", "-t", "5"]
+  },
+  "deliverables": ["numerals", "absolute_symbols", "midi_path", "index_paths_considered"],
+  "must_not": [
+    "invent numeral suffixes outside the supported vocabulary",
+    "claim the pack was reproduced without verify_pack.py output",
+    "pass uppercase key names for minor renders"
+  ]
+}
